@@ -1,0 +1,6 @@
+### Git ###
+.gitignore
+.git
+
+### VisualStudioCode ###
+.vscode/*
