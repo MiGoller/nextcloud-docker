@@ -6,7 +6,7 @@
 #
 
 # Set the base Nextcloud image's tag
-ARG NEXTCLOUDTAG="19-fpm"
+ARG NEXTCLOUDTAG="20-fpm"
 
 # Set the base image to use for subsequent instructions.
 FROM nextcloud:${NEXTCLOUDTAG}
@@ -21,19 +21,34 @@ LABEL \
     org.label-schema.name="MiGoller" \
     org.label-schema.vendor="MiGoller" \
     org.label-schema.version="${NEXTCLOUDTAG}" \
-    org.label-schema.description="Vanilla Nextcloud image with S6-overlay and fulltextsearch service" \
+    org.label-schema.description="Nextcloud image with S6-overlay, cron service and more." \
     org.label-schema.url="https://github.com/MiGoller/nextcloud-docker" \
     org.label-schema.vcs-type="Git" \
     # org.label-schema.vcs-ref="${ARG_APP_COMMIT}" \
     org.label-schema.vcs-url="https://github.com/MiGoller/nextcloud-docker.git" \
     maintainer="MiGoller" \
     Author="MiGoller" \
-    org.opencontainers.image.source="https://github.com/MiGoller/nextcloud-docker"
+    # org.opencontainers.image.created= \
+    org.opencontainers.image.documentation="https://github.com/MiGoller/nextcloud-docker" \
+    org.opencontainers.image.licenses="MIT-License" \
+    # org.opencontainers.image.revision= \
+    org.opencontainers.image.source="https://github.com/MiGoller/nextcloud-docker" \
+    org.opencontainers.image.title="Nextcloud" \
+    # org.opencontainers.image.url= \
+    # org.opencontainers.image.version=7.10.1 \
+    org.opencontainers.image.vendor="MiGoller"
 
-# Install S6-Overlay
+ENV NEXTCLOUD_UPDATE=1
+
+# Install additional stuff
 RUN \
-    # Determine S6 arch to download and to install
-    S6_ARCH="" \
+    # Install cron-daemon
+    apt-get update -y \
+    && apt-get install -y --no-install-recommends cron \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    # Determine S6 arch to download and to install S6-overlay
+    && S6_ARCH="" \
     && dpkgArch="$(dpkg --print-architecture)" \
     && case "${dpkgArch##*-}" in \
         amd64) S6_ARCH='amd64';; \

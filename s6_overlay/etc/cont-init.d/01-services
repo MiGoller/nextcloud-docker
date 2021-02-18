@@ -1,0 +1,9 @@
+#!/usr/bin/with-contenv bash
+
+# Add custom services at runtime?
+if [ -d /opt/services.d ]; then
+    cp -R -f "/opt/services.d/"* /etc/services.d
+fi
+
+# Ensure service scripts' permission are ok
+chmod 775 -R /etc/services.d

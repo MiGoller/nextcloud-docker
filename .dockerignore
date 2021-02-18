@@ -4,3 +4,7 @@
 
 ### VisualStudioCode ###
 .vscode/*
+
+### Datadir in working copy ###
+datadir
+examples
