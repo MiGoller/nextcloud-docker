@@ -1,0 +1,40 @@
+version: '2'
+
+services:
+  db:
+    image: mariadb:latest
+    restart: always
+    networks:
+      - default
+    volumes:
+      - ./datadir/mariadb:/var/lib/mysql
+    env_file: 
+      - mariadb.env
+  app:
+    build:
+      context: ../..
+    restart: always
+    networks:
+      - default
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - ./datadir/nc:/var/www/html
+      # - ./examples/services/:/opt/services.d/:ro
+    env_file:
+      - nextcloud.env
+      - mariadb.env
+    mem_limit: 2g
+    memswap_limit: 2g
+  web:
+    image: nginx
+    networks:
+      - default
+    links:
+      - app
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    volumes_from:
+      - app
+    ports: 
+      - 8081:80

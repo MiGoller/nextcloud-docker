@@ -1,0 +1,65 @@
+version: '2'
+
+services:
+  db:
+    image: mariadb:latest
+    restart: always
+    networks:
+      - default
+    volumes:
+      - ./datadir/mariadb:/var/lib/mysql
+    env_file: 
+      - mariadb.env
+  app:
+    build:
+      context: ../..
+    restart: always
+    networks:
+      - default
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - ./datadir/nc:/var/www/html
+      - ./services.d/:/opt/services.d/:ro
+    env_file:
+      - nextcloud.env
+      - mariadb.env
+    mem_limit: 2g
+    memswap_limit: 2g
+  web:
+    image: nginx
+    networks:
+      - default
+    links:
+      - app
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    volumes_from:
+      - app
+    ports: 
+      - 8081:80
+  elastic:
+    image: ghcr.io/migoller/elasticsearch:develop
+    restart: always
+    ports:
+      - 9200:9200
+      - 9300:9300
+    networks:
+      - default
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - ./datadir/elasticsearch:/usr/share/elasticsearch/data
+    environment:
+      - "discovery.type=single-node"
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "TAKE_FILE_OWNERSHIP=true"
+      - "node.name=testnode"
+      - cluster.name=ncsearch
+      - bootstrap.memory_lock=true
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 1g
+    memswap_limit: 1g
