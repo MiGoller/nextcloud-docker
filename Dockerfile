@@ -12,7 +12,7 @@ ARG NEXTCLOUDTAG="20-fpm"
 FROM nextcloud:${NEXTCLOUDTAG}
 
 # Set S6-Overlay version
-ARG ARG_S6_OVERLAY_VERSION="2.1.0.2"
+ARG ARG_S6_OVERLAY_VERSION="2.2.0.0"
 
 # Basic build-time metadata as defined at http://label-schema.org
 LABEL \
