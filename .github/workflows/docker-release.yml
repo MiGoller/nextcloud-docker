@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        baseimagetag: ['19-fpm', '20-fpm']
+        baseimagetag: ['20-fpm', '21-fpm', '22-fpm']
     name: Publish Nextcloud v${{ matrix.baseimagetag }} images to GitHub and DockerHub Container Registries
     if: (github.ref == 'refs/heads/main')
         || (github.event_name == 'schedule')
