@@ -31,7 +31,7 @@ jobs:
             docker-compose --file docker-compose.test.yml build
             docker-compose --file docker-compose.test.yml run sut
           else
-            docker build . --file Dockerfile --build-arg baseimagetag=${{ matrix.baseimagetag }}
+            docker build . --file Dockerfile --build-arg NEXTCLOUDTAG=${{ matrix.baseimagetag }}
           fi
 
       - name: Set up QEMU
@@ -77,7 +77,7 @@ jobs:
           platforms: linux/amd64,linux/arm64,linux/arm
           push: true
           build-args: |
-            baseimagetag=${{ matrix.baseimagetag }}
+            NEXTCLOUDTAG=${{ matrix.baseimagetag }}
           tags: |
             ${{ steps.image_information.outputs.IMAGE_ID }}:${{ steps.image_information.outputs.IMAGE_REF }}
             ghcr.io/${{ steps.image_information.outputs.IMAGE_ID }}:${{ steps.image_information.outputs.IMAGE_REF }}
