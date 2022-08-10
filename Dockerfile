@@ -6,7 +6,7 @@
 #
 
 # Set the base Nextcloud image's tag
-ARG NEXTCLOUDTAG="23-fpm"
+ARG NEXTCLOUDTAG="24-fpm"
 
 # Set the base image to use for subsequent instructions.
 FROM nextcloud:${NEXTCLOUDTAG}
